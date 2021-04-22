@@ -21,37 +21,36 @@
 
    $data = url_response($url_base);
 
-   if (isset($data->{'parse'}->{'links'})) {
+   if (isset($data['parse']['links'])) {
       
-      foreach ($data->{'parse'}->{'links'} as $content_first) {
+      foreach ($data['parse']['links'] as $content_first) {
          
          // Page Wiki de la CIV225
-         $page_wiki = $content_first->{'*'};
+         $page_wiki = $content_first['*'];
 
          // URL de traitement des modèles ou templates incomplète
          $url_first = "https://fr.wikipedia.org/w/api.php?action=parse&format=json&prop=templates&page=";
 
          // Incrémentation des différentes pages WIKI issues de l'Archive CIV225
-         $url_second += $url_first.$page_wiki;
+         $url_second = $url_first.urlencode($page_wiki);
 
          $page_wiki_treatment = url_response($url_second);
 
-         if (isset($page_wiki_treatment->{'parse'}->{'templates'})) {
+         if (isset($page_wiki_treatment['parse']['templates'])) {
 
-            foreach ($page_wiki_treatment->{'parse'}->{'templates'} as $content_second) {
+            foreach ($page_wiki_treatment['parse']['templates'] as $content_second) {
                
-               $data_second = $content_second->{'*'};
+               $data_second = $content_second['*'];
 
                if (isset($data_second)) {
                   
-                  $modele_template = array("Modèle:Sources secondaires",
-                                           "Modèle:Sources",
-                                           "Modèle:Méta bandeau d'avertissement");
+                  $modele_template = array("Modèle:Méta bandeau d'avertissement");
 
                   if (in_array($data_second, $modele_template)) {
                      
                      // Page WIKI à améliorer
-                     echo $page_wiki;
+                     echo $page_wiki."\n";
+
                   }
                }
 
@@ -62,6 +61,8 @@
   
       }
    }
+
+   echo count($page_wiki);
 
 
 
