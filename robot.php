@@ -1,69 +1,94 @@
 <?php
 
-/* ---------------------------------------------------Fonctions-----------------------------------------------------------*/
+/*
+#############################################################################
+#                                                                           #
+#   @Auteur : Paul Bouaffou                                                 #
+#                                                                           #
+#   @Description : API de génération des articles wikipédia                 #
+#   à améliorer liés à la Côte d'Ivoire                                     #
+#                                                                           #
+#   @Licence : Licence MIT                                                  #
+#                                                                           #
+#############################################################################
+*/
+
+/* ---------------------------Fonction(s)----------------------------------*/
 
    // Fonction de traitement des données de format JSON issues d'une URL
    function url_response($url){
 
+       // Lecture des données au format JSON dans une chaîne
        $json_content = file_get_contents($url);
 
+       // Décodage d'une chaîne JSON
        $json_response = json_decode($json_content, true);
 
+       // Résultat
        return $json_response;
 
    }
 
-/* ---------------------------------Construction de l'API des articles wikipedia à améliorer------------------------------*/
+/* --------------------------Construction de l'API des articles wikipedia à améliorer liés à la Côte d'Ivoire------------------------------*/
 
 
-   //URL de base ou API MEDIAWIKI de base
-   $url_base = "https://fr.wikipedia.org/w/api.php?action=parse&format=json&page=Projet:C%C3%B4te_d%27Ivoire/Articles_r%C3%A9cents/Archive&prop=links";
+   // URL de base ou URL principale listant tous les articles wikipédia liés à la Côte d'Ivoire
+   $url_base = "https://petscan.wmflabs.org/?language=fr&project=wikipedia&format=json&categories=Portail%3AC%C3%B4te+d%27Ivoire%2FArticles+li%C3%A9s%0D%0A&ns=0&depth=0&interface_language=fr&doit=";
 
-   $data = url_response($url_base);
+   // Exécution de la fonction url_response()
+   $data_first = url_response($url_base);
 
-   if (isset($data['parse']['links'])) {
+   // Détermine si la variable $data_first['*'] est déclarée et est différente de null
+   if (isset($data_first['*'])) {
       
-      foreach ($data['parse']['links'] as $content_first) {
+      foreach ($data_first['*'] as $content_first) {
          
-         // Page Wiki de la CIV225
-         $page_wiki = $content_first['*'];
+         $data_second = $content_first['a']['*'];
 
-         // URL de traitement des modèles ou templates incomplète
-         $url_first = "https://fr.wikipedia.org/w/api.php?action=parse&format=json&prop=templates&page=";
+         // Détermine si la variable $data_second est déclarée et est différente de null
+         if (isset($data_second)) {
+            
+            foreach ($data_second as $content_second) {
 
-         // Incrémentation des différentes pages WIKI issues de l'Archive CIV225
-         $url_second = $url_first.urlencode($page_wiki);
+               $page_wiki = $content_second['title'];
 
-         $page_wiki_treatment = url_response($url_second);
+               // URL secondaire et incomplète pour l'obtention des modèles d'un article wikipédia
+               $url_first = "https://fr.wikipedia.org/w/api.php?action=parse&format=json&prop=templates&page=";
 
-         if (isset($page_wiki_treatment['parse']['templates'])) {
+               // URL secondaire et complète faisant passé en revue tous les articles wikipédia après encodage de ceux-ci
+               $url_second = $url_first.urlencode($page_wiki);
 
-            foreach ($page_wiki_treatment['parse']['templates'] as $content_second) {
-               
-               $data_second = $content_second['*'];
+               // Exécution de la fonction url_response()
+               $page_wiki_treatment = url_response($url_second);
 
-               if (isset($data_second)) {
+               // Détermine si la variable $page_wiki_treatment['parse']['templates'] est déclarée et est différente de null
+               if (isset($page_wiki_treatment['parse']['templates'])) {
                   
-                  $modele_template = array("Modèle:Méta bandeau d'avertissement");
-
-                  if (in_array($data_second, $modele_template)) {
+                  foreach ($page_wiki_treatment['parse']['templates'] as $content_third) {
                      
-                     // Page WIKI à améliorer
-                     echo $page_wiki."\n";
+                     $data_third = $content_third['*'];
 
+                     // Détermine si la variable $data_third est déclarée et est différente de null
+                     if (isset($data_third)) {
+                        
+                        // Modèle ou template wikipédia demandant l'amélioration d'un article
+                        $modele_template = array("Modèle:Méta bandeau d'avertissement");
+
+                        // Vérification de la présence du Modèle:Méta bandeau d'avertissement dans le groupe des modèles de l'article
+                        if (in_array($data_third, $modele_template)) {
+                           
+                           // Article wikipédia à améliorer lié à la Côte d'Ivoire
+                           echo $page_wiki."\n";
+                        }
+                     }
                   }
                }
 
-
             }
-         
          }
-  
       }
    }
 
-   echo count($page_wiki);
 
 
-
-?>
+      
