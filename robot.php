@@ -88,6 +88,11 @@
          }
       }
    }
+   else {
+
+      // Résultat en cas d'erreur
+      echo "Le programme est en maintenance et excusez-nous pour le désagrément causé !";
+   }
 
 
 
