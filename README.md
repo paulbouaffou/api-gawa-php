@@ -1,7 +1,7 @@
 # API-GAWA-PHP
 
 API-GAWA-PHP est une API permettant de générer tous les articles wikipédia à améliorer liés à la Côte d'Ivoire.
-Cet outil a été développé pour aider les membres de la communauté WIKIMEDIA CÔTE D'IVOIRE à mieux travailler lors des ateliers (ou edithatons).
+Cet outil a été développé pour aider les membres de la communauté [WIKIMEDIA CÔTE D'IVOIRE](https://wikimedia.ci/) à mieux travailler lors des ateliers (ou edithatons).
 Le code de l'API est uniquement en langage PHP et s'exécute en ligne de commande. Ainsi je serais ravi qu'un bénévole-développeur me tienne compagnie pour une meilleure amélioration de ce programme.
 
 
@@ -14,4 +14,4 @@ Le code de l'API est uniquement en langage PHP et s'exécute en ligne de command
 * [Paul Bouaffou](https://github.com/paulbouaffou) - Contributeur
 
 ## Licence
-Ce projet est ouvert et disponible sous la [Licence MIT](LICENSE).
+Ce projet est ouvert et disponible sous la [Licence MIT](https://opensource.org/licenses/MIT).
